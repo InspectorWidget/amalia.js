@@ -164,7 +164,7 @@ module.exports = function (grunt) {
             build: {
                 options: {
                     paths: [
-                        "assets/less"
+                        "src/assets/less"
                     ],
                     cleancss: true,
                     compress: true
