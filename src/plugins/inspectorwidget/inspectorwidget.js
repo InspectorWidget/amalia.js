@@ -124,6 +124,61 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          */
         drawingHandler: null,
         /**
+         * Drawing callback
+         * @property drawingCallback
+         * @type {Callback}
+         * @default null
+         */
+        drawingCallback: null,
+        /**
+         * Drawing caller
+         * @property drawingCaller
+         * @type {Object}
+         * @default null
+         */
+        drawingCaller: null,
+        /**
+         * Last drawn shape
+         * @property lastDrawnShape
+         * @type {Object}
+         * @default null
+         */
+        lastDrawnShape: null,
+        /**
+         * Tooltip configuration
+         * @property tooltipConfiguration
+         * @default 150
+         */
+        tooltipConfiguration : {
+        position : {
+            my : "left+10 center",
+            at : "right center",
+            /*my : "center bottom-20",
+            at : "center top",*/
+            delay : 3000,
+            using : function (position,feedback)
+            {
+                $( this ).css( position );
+                $( "<div>" ).addClass( "ajs-arrow" ).addClass( feedback.horizontal ).addClass( feedback.vertical ).appendTo( this );
+            }
+        },
+        content : function ()
+        {
+            var element = $( this );
+            var title = element.attr( 'title' );
+            if (element.is( "[data-src]" ))
+            {
+                var src = element.attr( 'data-src' );
+                return "<img class='image' alt='" + title + "' src='" + src + "' />";
+            }
+            else
+            {
+                title = title.replace( /(?:\r\n|\r|\n)/g,'<br />' );
+                return "<p>" + title + "</p>";
+            }
+        }
+    },
+        /**
          * Localisation manager
          * @property localisationManager
          * @type {Object}
@@ -172,7 +227,8 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
             this.createCanvas();
             this.createContextMenuOption();
             this.metadataManager = this.mediaPlayer.getMetadataManager();
-            if (this.settings.editable === true) {
+            /*InspectorWidget*/
+            /*if (this.settings.editable === true) {*/
                 this.createToolBoxCtrl();
                 this.createErrorContainer();
                 this.createDoDrawRect();
@@ -185,7 +241,8 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
                 this.container.on('mousemove', {
                     self: this
                 }, this.onMouseMove);
-            }
+            /*InspectorWidget*/
+            /*}*/
         },
         /**
          * Set player events listener on the player
@@ -275,7 +332,8 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          */
         updateBlockData: function () {
             // use settings metadata if not empty
-            if (this.settings.metadataId !== '') {
+            /*InspectorWidget*/
+            /*if (this.settings.metadataId !== '') {
                 this.spatialsData = this.updateMetadata(this.settings.metadataId, 0, this.mediaPlayer.getDuration());
             }
             else {
@@ -293,7 +351,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
 
                     this.spatialsData = this.spatialsData.concat(spatialsData);
                 }
-            }
+            }*/
         },
         /**
          * In charge to get metadata by id,tcin and tcout
@@ -378,6 +436,15 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
             };
         },
         /**
+        * Return Media Player
+        * @method getMediaPlayer
+        */
+        getMediaPlayer : function ()
+        {
+            var player = this.mediaPlayer.getMediaPlayer();
+            return player.get( 0 );
+        },
+        /**
          * In charge to update canvas position
          * @method updateCanvasPosition
          */
@@ -450,11 +517,12 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          */
         createToolBoxCtrl: function () {
             var _toolboxElement = $('<div>', {
-                'class': 'toolbox'
+                'class': 'toolbox',
+                'title' : 'Drag to reposition'
             }).draggable({
                 containment: "parent",
                 scroll: false
-            });
+            }).tooltip(this.tooltipConfiguration);
             _toolboxElement.css('position', 'absolute');
             _toolboxElement.append(this.createAddToolboxItem());
             _toolboxElement.append(this.createEraserToolboxItem());
@@ -463,7 +531,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
             _toolboxElement.find('.add-shapebox .add div.add-ctrl span.ctrl').on('click', {
                 self: this
             }, function (event) {
-                event.data.self.openAddShape();
+                event.data.self.applyAddShape();
             });
             _toolboxElement.find('.add-shapebox .add div.add-selectFormBox div.close-box span.ctrl').on('click', {
                 self: this
@@ -489,10 +557,11 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
             //Add Ctrl
             var _addCtrlBox = $('<div>', {
                 'class': 'add-ctrl'
-            });
+            }).hide();
             var _addCtrl = $('<span>', {
-                'class': 'ctrl ajs-icon ajs-icon-plus'
-            });
+                'class': 'ctrl ajs-icon ajs-icon-check',
+                'title' : 'Apply'
+            }).tooltip( this.tooltipConfiguration );
             _addCtrlBox.append(_addCtrl);
             _addBox.append(_addCtrlBox);
             // select form
@@ -503,11 +572,13 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
                 'class': 'close-box'
             });
             var _closeCtrl = $('<span>', {
-                'class': 'ctrl ajs-icon ajs-icon-remove'
-            });
+                'class': 'ctrl ajs-icon ajs-icon-remove',
+                'title' : 'Undo'
+            }).tooltip( this.tooltipConfiguration );
             _closeCtrlBox.append(_closeCtrl);
             _selectFormBox.append(_closeCtrlBox);
-            var _addShapeMsgBox = $('<div>', {
+            /*InspectorWidget*/
+            /*var _addShapeMsgBox = $('<div>', {
                 'class': 'add-shape-msg',
                 'text': 'Sélectionnez une forme'
             });
@@ -524,7 +595,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
                 event.data.self.setSelectedShape('rectangle');
             });
             _addShapeRectMsgBox.append(_rectIcon);
-            _selectFormBox.append(_addShapeRectMsgBox);
+            _selectFormBox.append(_addShapeRectMsgBox);*/
             _addBox.append(_selectFormBox);
             _addShapeBox.append(_addBox);
             return _addShapeBox;
@@ -537,10 +608,11 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
             //Erase Ctrl
             var _eraseCtrlBox = $('<div>', {
                 'class': 'erase-box'
-            });
+            }).hide();
             var _eraseCtrl = $('<span>', {
-                'class': 'ctrl ajs-icon ajs-icon-eraser'
-            });
+                'class': 'ctrl ajs-icon ajs-icon-eraser',
+                'title' : 'Erase'
+            }).tooltip( this.tooltipConfiguration );
             _eraseCtrlBox.append(_eraseCtrl);
             return _eraseCtrlBox;
         },
@@ -605,15 +677,38 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
         /**
          * In charge to open add shape block and select last used shape
          */
-        openAddShape: function () {
+        openAddShape: function (caller,callback) {
+            this.lastDrawnShape = null;
+            var msg = 'openAddShape failed';
             if (this.startDraw()) {
                 var _toolboxElement = this.container.find('.toolbox');
-                _toolboxElement.find('.add .add-ctrl').hide();
+                _toolboxElement.show();
+                _toolboxElement.find('.add .add-ctrl').show();
                 _toolboxElement.find('.add .add-selectFormBox').show();
                 _toolboxElement.find('.add-selectFormBox div').removeClass('on');
                 _toolboxElement.find('.add-selectFormBox div.add-shape-' + this.selectedShape).addClass('on');
                 //erase
-                _toolboxElement.find('.erase-box').hide();
+                _toolboxElement.find('.erase-box').show();
+                msg = 'openAddShape worked';
+            }
+            try
+            {
+                /* jslint evil: true */
+                if (typeof callback === "function") {
+                    // Call it, since we have confirmed it is callable
+                    //callback(msg);
+                    this.drawingCallback = callback;
+                    this.drawingCaller = caller;
+                    this.drawingCallback(caller,msg);
+                }
+                //eval( callback + '(msg)' );
+            }
+            catch (e)
+            {
+                if (this.logger !== null)
+                {
+                    this.logger.warn( "openAddShape Send callback failed." );
+                }
             }
         },
         /**
@@ -621,10 +716,21 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          */
         closeAddShape: function () {
             var _toolboxElement = this.container.find('.toolbox');
+            _toolboxElement.hide();
             _toolboxElement.find('.add .add-selectFormBox').hide();
-            _toolboxElement.find('.add div.add-ctrl').show();
-            _toolboxElement.find('.erase-box').show();
+            _toolboxElement.find('.add div.add-ctrl').hide();
+            _toolboxElement.find('.erase-box').hide();
             this.endDraw();
+            this.lastDrawnShape = null;
+        },
+        /**
+        * In charge send last used shape parameters and to close add shape block
+        */
+        applyAddShape : function () {  
+            if (typeof this.drawingCallback === "function") {
+                this.drawingCallback(this.drawingCaller,this.lastDrawnShape);
+            }
+            this.closeAddShape();
         },
         /**
          * return  eraseState
@@ -670,16 +776,19 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          */
         startDraw: function () {
             if (this.getSelectedMetadataId() !== null) {
-                if (this.isValidMetadataType()) {
+                /*InspectorWidget*/
+                /*if (this.isValidMetadataType()) {*/
                     this.doDraw = true;
                     this.container.addClass('draw');
                     this.setEraseState(false);
                     this.mediaPlayer.pause();
                     return true;
-                }
+                /*InspectorWidget*/
+                /*}
                 else {
                     this.setErrorMsg(fr.ina.amalia.player.PlayerMessage.PLUGIN_METADATA_ITEMS_EDITOR_NEED_METADTA_ITEM_TYPE);
                 }
+                */
             }
             else {
                 this.setErrorMsg(fr.ina.amalia.player.PlayerMessage.PLUGIN_METADATA_ITEMS_EDITOR_NEED_METADTA);
@@ -753,18 +862,20 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          */
         drawShape: function (shapeType, x, y, w, h) {
             var shape = null;
-            if (shapeType === "ellipse") {
+            /*InspectorWidget*/
+            /*if (shapeType === "ellipse") {
                 shape = this.canvas.ellipse(x, y, w, h);
                 shape.fig = "ellipse";
             }
-            else {
+            else {*/
                 // default shape rectangle
                 shape = this.canvas.rect(x, y, w, h);
                 shape.fig = "rectangle";
-            }
+            /*InspectorWidget*/
+            /*}*/
 
             if (shape) {
-                shape.objectId = 'spatial_' + fr.ina.amalia.player.helpers.UtilitiesHelper.generateUUID();
+                shape.objectId = 'region_' + fr.ina.amalia.player.helpers.UtilitiesHelper.generateUUID();
                 shape.attr({
                     // Attributes of the element
                     //"fill" : "#dfed48",
@@ -786,8 +897,9 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
                     fill: 'black',
                     draw: [
                         'bbox',
-                        'circle'
+                        'rectangle'
                     ],
+                    rotate: false,
                     range: {
                         scale: [
                             0,
@@ -1083,7 +1195,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          * @param {Object} event
          */
         onMouseDown: function (event) {
-            if ((event.data.self.doDraw === true && event.ctrlKey === true && event.data.self.drawing === false) || (event.shiftKey === true && event.ctrlKey === true)) {
+            if ((event.data.self.doDraw === true /*InspectorWidget && event.ctrlKey === true*/ && event.data.self.drawing === false) /*InspectorWidget|| (event.shiftKey === true && event.ctrlKey === true)*/) {
                 var videoSize = event.data.self.getVideoSize();
                 var startX = Math.max(0, event.offsetX - ((event.data.self.container.height() - 45 - videoSize.h) / 2));
                 var startY = Math.max(0, event.offsetY - ((event.data.self.container.height() - videoSize.h) / 2));
@@ -1120,6 +1232,16 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
                         t: event.data.self.getSelectedShape()
                     };
                     event.data.self.createDataShape(_shape, _shapePos);
+                    
+                    var _lastDrawnShape = {
+                        x : parseFloat( /*(*/event.data.self.drawingHandler.doDraw.startX/* + event.data.self.drawingHandler.doDraw.endX) / 2*/ / event.data.self.canvas.width ),
+                        y : parseFloat( /*(*/event.data.self.drawingHandler.doDraw.startY/* + event.data.self.drawingHandler.doDraw.endY) / 2*/ / event.data.self.canvas.height ),
+                        rx : parseFloat( (w / event.data.self.canvas.width) /*/ 2*/ ),
+                        ry : parseFloat( (h / event.data.self.canvas.height) /*/ 2*/ ),
+                        time : parseFloat( event.data.self.mediaPlayer.getCurrentTime() ),
+                        src : event.data.self.mediaPlayer.getCurrentSrc(),
+                    };
+                    event.data.self.lastDrawnShape = _lastDrawnShape;
                 }
             }
         },
@@ -1154,6 +1276,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
                 ft.unplug();
                 ft.subject.remove();
                 ft.self.setEraseState(false);
+                ft.self.lastDrawnShape = null;
                 ft.self.mediaPlayer.getMediaPlayer().trigger(fr.ina.amalia.player.PlayerEventType.DATA_CHANGE, {
                     id: ft.self.getSelectedMetadataId()
                 });
@@ -1167,7 +1290,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
                     },
                     rx: parseFloat((ft.attrs.size.x * ft.attrs.scale.x) / 2 / ft.self.canvas.width),
                     ry: parseFloat((ft.attrs.size.y * ft.attrs.scale.y) / 2 / ft.self.canvas.height),
-                    o: parseFloat(ft.attrs.rotate),
+                    o: 0/*InspectorWidget parseFloat(ft.attrs.rotate)*/,
                     t: ft.self.shape
                 };
 

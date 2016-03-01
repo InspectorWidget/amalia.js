@@ -137,7 +137,7 @@ fr.ina.amalia.player.plugins.overlay.DrawBase.extend("fr.ina.amalia.player.plugi
                     rectParameter.h = data.shape.ry * height * 2;
                     rectParameter.x = (data.shape.c.x * width) - rectParameter.w / 2;
                     rectParameter.y = (data.shape.c.y * height) - rectParameter.h / 2;
-                    rectParameter.o = data.shape.o;
+                    rectParameter.o = 0/*InspectorWidget data.shape.o*/;
                     return rectParameter;
                 }
             }
