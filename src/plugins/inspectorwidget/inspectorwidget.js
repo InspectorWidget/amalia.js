@@ -1195,7 +1195,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          * @param {Object} event
          */
         onMouseDown: function (event) {
-            if ((event.data.self.doDraw === true /*InspectorWidget && event.ctrlKey === true*/ && event.data.self.drawing === false) /*InspectorWidget|| (event.shiftKey === true && event.ctrlKey === true)*/) {
+            if ((event.data.self.doDraw === true && /*InspectorWidget event.ctrlKey*/event.shiftKey === true && event.data.self.drawing === false) /*InspectorWidget|| (event.shiftKey === true && event.ctrlKey === true)*/) {
                 var videoSize = event.data.self.getVideoSize();
                 var startX = Math.max(0, event.offsetX - ((event.data.self.container.height() - 45 - videoSize.h) / 2));
                 var startY = Math.max(0, event.offsetY - ((event.data.self.container.height() - videoSize.h) / 2));
