@@ -225,7 +225,8 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
             this.updateBlockData();
             this.pluginContainer.append(this.container);
             this.createCanvas();
-            this.createContextMenuOption();
+            /*InspectorWidget: disable custom right-click menu*/
+            /*this.createContextMenuOption();*/
             this.metadataManager = this.mediaPlayer.getMetadataManager();
             /*InspectorWidget*/
             /*if (this.settings.editable === true) {*/
