@@ -175,10 +175,11 @@ $.Class("fr.ina.amalia.player.plugins.PluginManager", {}, {
     },
     loadPlugins: function () {
         // Load static plugins
-        var settingsContextMenuPlugin = {
+        /*InspectorWidget: disable custom right-click menu*/
+		/*var settingsContextMenuPlugin = {
             internalPlugin: true
         };
-        this.contextMenuPlugin = this.loadPlugin('fr.ina.amalia.player.plugins.ContextMenuPlugin', settingsContextMenuPlugin, this.mediaPlayer, this.mediaContainer);
+        this.contextMenuPlugin = this.loadPlugin('fr.ina.amalia.player.plugins.ContextMenuPlugin', settingsContextMenuPlugin, this.mediaPlayer, this.mediaContainer);*/
         // default configuration
         var settingsControlBar = $.extend({
                 internalPlugin: true,
