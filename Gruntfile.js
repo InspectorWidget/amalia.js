@@ -123,7 +123,13 @@ module.exports = function (grunt) {
                         'src/plugins/overlay/draw-ellipse.js',
                         'src/plugins/overlay/overlay.js'
                     ],
-                    'build/js/<%= pkg.name %>-plugin-text-sync.min.js': [
+                    'build/js/<%= pkg.name %>-plugin-inspectorwidget.min.js' : [
+                        'src/plugins/inspectorwidget/spatials-data-parser.js',
+                        'src/plugins/inspectorwidget/draw-base.js',
+                        'src/plugins/inspectorwidget/draw-rect.js',
+                        'src/plugins/inspectorwidget/inspectorwidget.js'
+                    ],
+                    'build/js/<%= pkg.name %>-plugin-text-sync.min.js' : [
                         'src/plugins/text-sync/component.js',
                         'src/plugins/text-sync/text-sync.js'
                     ],
