@@ -1239,7 +1239,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
                         rx : parseFloat( (w / event.data.self.canvas.width) /*/ 2*/ ),
                         ry : parseFloat( (h / event.data.self.canvas.height) /*/ 2*/ ),
                         time : parseFloat( event.data.self.mediaPlayer.getCurrentTime() ),
-                        src : event.data.self.mediaPlayer.getCurrentSrc(),
+                        src : event.data.self.mediaPlayer.settings.src,
                     };
                     event.data.self.lastDrawnShape = _lastDrawnShape;
                 }
