@@ -35,7 +35,7 @@
  * @param {Object} mediaPlayer
  * @param {Object} data
  */
-fr.ina.amalia.player.plugins.overlay.DrawBase.extend("fr.ina.amalia.player.plugins.overlay.DrawRect", {
+fr.ina.amalia.player.plugins.InspectorWidget.DrawBase.extend("fr.ina.amalia.player.plugins.InspectorWidget.DrawRect", {
         classCss: "spatial-base"
 
     },
