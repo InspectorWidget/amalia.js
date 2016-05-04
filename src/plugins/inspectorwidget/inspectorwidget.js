@@ -1196,15 +1196,19 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          * @param {Object} event
          */
         onMouseDown: function (event) {
-            if ((event.data.self.doDraw === true && /*InspectorWidget event.ctrlKey*/event.shiftKey === true && event.data.self.drawing === false) /*InspectorWidget|| (event.shiftKey === true && event.ctrlKey === true)*/) {
+            if (event.target.className.baseVal === 'inspectorwidget-canvas' && event.data.self.doDraw === true && event.data.self.drawing === false) {
                 var videoSize = event.data.self.getVideoSize();
-                var startX = Math.max(0, event.offsetX - ((event.data.self.container.height() - 45 - videoSize.h) / 2));
-                var startY = Math.max(0, event.offsetY - ((event.data.self.container.height() - videoSize.h) / 2));
+                var startX = Math.max(0, event.offsetX);// + ((event.data.self.container.height() - 45 - videoSize.h) / 2));
+                var startY = Math.max(0, event.offsetY);// + ((event.data.self.container.height() - videoSize.h) / 2));
                 event.data.self.drawing = true;
                 event.data.self.drawingHandler.show();
                 event.data.self.drawingHandler.toFront();
                 event.data.self.drawingHandler.doDraw.startX = startX;
-                event.data.self.drawingHandler.doDraw.startY = startY + 20;
+                event.data.self.drawingHandler.doDraw.startY = startY;
+                event.data.self.drawingHandler.doDraw.endX = startX;
+                event.data.self.drawingHandler.doDraw.endY = startY;
+                event.data.self.drawingHandler.attr('width', 0);
+                event.data.self.drawingHandler.attr('height', 0);
                 event.data.self.drawingHandler.attr('x', event.data.self.drawingHandler.doDraw.startX);
                 event.data.self.drawingHandler.attr('y', event.data.self.drawingHandler.doDraw.startY);
             }
@@ -1254,8 +1258,8 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
         onMouseMove: function (event) {
             if (event.data.self.drawing === true) {
                 var videoSize = event.data.self.getVideoSize();
-                var endX = Math.max(0, event.offsetX - ((event.data.self.container.height() - 45 - videoSize.h) / 2));
-                var endY = Math.max(0, event.offsetY - ((event.data.self.container.height() - videoSize.h) / 2));
+                var endX = Math.max(0, event.offsetX);// - ((event.data.self.container.height() - 45 - videoSize.h) / 2));
+                var endY = Math.max(0, event.offsetY);//- ((event.data.self.container.height() - videoSize.h) / 2));
                 var width = Math.max(0, endX - event.data.self.drawingHandler.doDraw.startX);
                 var height = Math.max(0, endY - event.data.self.drawingHandler.doDraw.startY);
                 event.data.self.drawingHandler.doDraw.endX = endX;
