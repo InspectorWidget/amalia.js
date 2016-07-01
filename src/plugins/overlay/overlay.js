@@ -386,8 +386,8 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
             var videoSize = this.getVideoSize();
             var player = this.mediaPlayer.getMediaPlayer();
             this.container.find('.overlay-canvas').css({
-                'left': player.get(0).offsetLeft + (player.width() - videoSize.w) / 2,
-                'top': player.get(0).offsetTop + (player.height() - videoSize.h) / 2
+                'left': (player.width() - videoSize.w) / 2,
+                'top': (player.height() - videoSize.h) / 2
             });
         },
         /**
