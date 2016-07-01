@@ -302,6 +302,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
                 });
             }
             this.resizeComponentsHeight();
+            this.updateComponentsLineHeight();
             if (this.timeAxisComponent !== null) {
                 this.timeAxisComponent.setZoomTc(this.zTcin, this.zTcout);
             }
