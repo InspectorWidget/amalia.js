@@ -57,7 +57,8 @@ module.exports = function (grunt) {
                         "_PlayerAmaliaVersion_": '<%= pkg.description %> V<%= pkg.version %>, © <%= pkg.author %> <%= grunt.template.today("yyyy") %>',
                         "_PlayerAmaliaHomepage_": '<%= pkg.homepage %>'
                     }
-                }
+                },
+				beautify: true
             },
             build: {
                 files: {
