@@ -1190,7 +1190,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          */
         onMouseDown: function (event) {
             if (event.target.className.baseVal === 'inspectorwidget-canvas' && event.data.self.doDraw === true && event.data.self.drawing === false) {
-                var videoSize = event.data.self.getVideoSize();
+                //var videoSize = event.data.self.getVideoSize();
                 var startX = Math.max(0, event.offsetX);// + ((event.data.self.container.height() - 45 - videoSize.h) / 2));
                 var startY = Math.max(0, event.offsetY);// + ((event.data.self.container.height() - videoSize.h) / 2));
                 event.data.self.drawing = true;
@@ -1250,7 +1250,7 @@ fr.ina.amalia.player.plugins.PluginBaseMultiBlocks.extend("fr.ina.amalia.player.
          */
         onMouseMove: function (event) {
             if (event.data.self.drawing === true) {
-                var videoSize = event.data.self.getVideoSize();
+                //var videoSize = event.data.self.getVideoSize();
                 var endX = Math.max(0, event.offsetX);// - ((event.data.self.container.height() - 45 - videoSize.h) / 2));
                 var endY = Math.max(0, event.offsetY);//- ((event.data.self.container.height() - videoSize.h) / 2));
                 var width = Math.max(0, endX - event.data.self.drawingHandler.doDraw.startX);
