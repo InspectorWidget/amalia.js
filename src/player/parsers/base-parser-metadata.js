@@ -174,6 +174,7 @@ $.Class("fr.ina.amalia.player.parsers.BaseParserMetadata", {}, {
                         entry = {
                             id: (localisation.hasOwnProperty('id') === true) ? localisation.id : null,
                             shape: (localisation.hasOwnProperty('shape') === true) ? localisation.shape : null,
+                            color: (localisation.hasOwnProperty('color') === true) ? localisation.color : null,
                             data: (localisation.hasOwnProperty('data') === true) ? localisation.data : null,
                             sublocalisations: (localisation.hasOwnProperty('sublocalisations') === true) ? localisation.sublocalisations : null,
                             label: label,
@@ -192,6 +193,7 @@ $.Class("fr.ina.amalia.player.parsers.BaseParserMetadata", {}, {
                         entry = {
                             id: (localisation.hasOwnProperty('id') === true) ? localisation.id : null,
                             shape: (localisation.hasOwnProperty('shape') === true) ? localisation.shape : null,
+                            color: (localisation.hasOwnProperty('color') === true) ? localisation.color : null,
                             data: (localisation.hasOwnProperty('data') === true) ? localisation.data : null,
                             sublocalisations: (localisation.hasOwnProperty('sublocalisations') === true) ? localisation.sublocalisations : null,
                             label: label,

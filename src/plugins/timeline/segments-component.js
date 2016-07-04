@@ -68,9 +68,10 @@ fr.ina.amalia.player.plugins.timeline.BaseComponent("fr.ina.amalia.player.plugin
          * @param {String} title
          * @return {Object} Dom
          */
-        createSegmentElement: function (tcin, tcout, percentWidth, width, title) {
+        createSegmentElement: function (tcin, tcout, percentWidth, width, title, color) {
             var self = this;
-            var color = (this.settings.color !== "") ? 'color:' + this.settings.color + '; background-color:' + this.settings.color + ';' : '';
+            /*InspectorWidget*/
+            //var color = (this.settings.color !== "") ? 'color:' + this.settings.color + '; background-color:' + this.settings.color + ';' : '';
             var styleClass = (this.settings.marker === true) ? 'item segment marker' : 'item segment';
             var container = $('<div>', {
                 class: styleClass,
@@ -146,6 +147,13 @@ fr.ina.amalia.player.plugins.timeline.BaseComponent("fr.ina.amalia.player.plugin
                 var tcout = parseFloat((this.zoomable === false) ? this.duration : this.tcout);
                 var itemTcin = parseFloat(data.tcin);
                 var itemTcout = parseFloat(data.tcout);
+                var color = (data.hasOwnProperty('color') && data.color !== null) 
+                ? 'color:' + data.color + '; background-color:' + data.color + ';' 
+                : ( (this.settings.color !== "") 
+                   ? 'color:' + this.settings.color + '; background-color:' + this.settings.color + ';' 
+                   : ''
+                  )
+                ;
 
                 var duration = tcout - tcin;
                 var width = ((itemTcout - itemTcin) * 100) / duration;
@@ -162,7 +170,7 @@ fr.ina.amalia.player.plugins.timeline.BaseComponent("fr.ina.amalia.player.plugin
                 var lineContent = this.mainContainer.find('.line-content').first();
                 var itemContainer = null;
                 if (itemTcin < tcout && itemTcout > tcin) {
-                    itemContainer = this.createSegmentElement(itemTcin, itemTcout, percentWidth, width, title);
+                    itemContainer = this.createSegmentElement(itemTcin, itemTcout, percentWidth, width, title, color);
                     itemContainer.data('metadata', data);
                     if (selectedData) {
                         //Add style
