@@ -1,5 +1,7 @@
 'use strict';
 module.exports = function (grunt) {
+    require('load-grunt-tasks')(grunt);
+    require('time-grunt')(grunt);
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
@@ -109,6 +111,7 @@ module.exports = function (grunt) {
                         'src/player/media-type-manager.js',
                         'src/player/media-type-dash-mpeg.js',
                         'src/player/shortcuts-manager.js',
+                        'src/player/base-player.js',
                         'src/player/player-html5.js',
                         'src/player/media-factory.js',
                         'src/ina-player.js'
@@ -137,6 +140,7 @@ module.exports = function (grunt) {
                         'src/plugins/captions/captions.js'
                     ],
                     'build/js/<%= pkg.name %>-plugin-timeline.min.js': [
+                        'src/plugins/timeline/default-configuration.js',
                         'src/plugins/timeline/base-component.js',
                         'src/plugins/timeline/focus-component.js',
                         'src/plugins/timeline/tic-component.js',
@@ -162,23 +166,23 @@ module.exports = function (grunt) {
                     'build/js/<%= pkg.name %>-plugin-storyboard.min.js': [
                         'src/plugins/storyboard/base-frame-position-calculator.js',
                         'src/plugins/storyboard/plugin-storyboard.js'
+                    ],
+                    'build/js/<%= pkg.name %>-yt-player.min.js': [
+                        'src/plugins/yt-player/yt-player.js'
+                    ],
+                    'build/js/<%= pkg.name %>-d3js-player.min.js': [
+                        'src/plugins/d3js-chart/plugin-d3js-chart.js'
                     ]
                 }
             }
         },
-        less: {
-            build: {
-                options: {
-                    paths: [
-                        "src/assets/less"
-                    ],
-                    cleancss: true,
-                    compress: true
-                },
+        sass: {
+            options: {
+                sourceMap: false
+            },
+            dist: {
                 files: {
-                    'build/css/<%= pkg.name %>.min.css': [
-                        "src/assets/less/default.less"
-                    ]
+                    'build/css/<%= pkg.name %>.min.css': "src/assets/sass/main.scss"
                 }
             }
         },
@@ -186,13 +190,13 @@ module.exports = function (grunt) {
             icons: {
                 src: 'src/assets/icons/*.svg',
                 dest: 'src/assets/fonts',
-                destCss: 'src/assets/less',
+                destCss: 'src/assets/sass',
                 options: {
-                    skip: require('os').platform() === 'win32',
                     font: 'ajs-webfont',
-                    stylesheet: 'less',
+                    stylesheet: 'scss',
                     syntax: 'bem',
                     htmlDemo: true,
+                    autoHint: true,
                     hashes: true,
                     relativeFontPath: '../fonts/',
                     destHtml: 'samples',
@@ -231,45 +235,55 @@ module.exports = function (grunt) {
             build: [
                 'tests/**/*.html'
             ]
+        },
+        watch: {
+            uglify: {
+                files: [
+                    'src/**/*.js',
+                    'src/**/**/*.js'
+                ],
+                tasks: ['uglify:build']
+            },
+            sass: {
+                files: 'src/assets/sass/*.scss',
+                tasks: ['sass']
+            }
+
+        },
+        browserSync: {
+            dev: {
+                bsFiles: {
+                    src: [
+                        'build/css/*.css',
+                        'build/js/*.js'
+                    ]
+                },
+                options: {
+                    watchTask: true,
+                    proxy: "localhost"
+                }
+            }
         }
-
     });
-    // These plugins provide necessary tasks.
-    // load tasks from the npm modules
-    // Styles
-    grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-webfont');
-    // QI
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
-
-    // Build
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-
-    // Doc
-    grunt.loadNpmTasks('grunt-contrib-yuidoc');
-
-    // Deploy
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-copy');
 
     //dev
     grunt.registerTask('dev', [
         'clean:build',
         'webfont:icons',
-        'jshint',
-        'qunit:build',
+        'copy:build',
         'uglify:build',
-        'less:build',
-        'copy:build'
+        'sass:dist',
+        'browserSync',
+        'watch'
     ]);
+
     //Default
     grunt.registerTask('default', [
         'clean:build',
         'jshint',
         'qunit:build',
         'uglify:build',
-        'less:build',
+        'sass:dist',
         'copy:build'
     ]);
 };
