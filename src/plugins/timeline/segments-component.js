@@ -147,11 +147,7 @@ fr.ina.amalia.player.plugins.timeline.BaseComponent("fr.ina.amalia.player.plugin
                 var tcout = parseFloat((this.zoomable === false) ? this.duration : this.tcout);
                 var itemTcin = parseFloat(data.tcin);
                 var itemTcout = parseFloat(data.tcout);
-                var color = (data.hasOwnProperty('color') && data.color !== null) 
-                ? 'color:' + data.color + '; background-color:' + data.color + ';' 
-                : ( (this.settings.color !== "") 
-                   ? 'color:' + this.settings.color + '; background-color:' + this.settings.color + ';' 
-                   : ''
+                var color = (data.hasOwnProperty('color') && data.color !== null) ? 'color:' + data.color + '; background-color:' + data.color + ';' : ( (this.settings.color !== "") ? 'color:' + this.settings.color + '; background-color:' + this.settings.color + ';' : ''
                   )
                 ;
 
