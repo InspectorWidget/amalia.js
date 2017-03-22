@@ -237,8 +237,14 @@ fr.ina.amalia.player.plugins.timeline.BaseComponent("fr.ina.amalia.player.plugin
         onDBLClickAtSegment: function (event) {
             var currentTarget = $(event.currentTarget);
             var tcin = parseFloat(currentTarget.data('tcin'));
+            var tcout = parseFloat(currentTarget.data('tcout'));
             var data = $(event.currentTarget).data('metadata');
             event.preventDefault();
+            event.data.self.clearSelectedItems();
+            event.data.self.mainContainer.trigger(event.data.self.Class.CLICK_TC, {
+                tc: tcout,
+                metadata: data
+            });
             if (event.data.self.settings.editable === true && typeof data === "object") {
                 event.data.self.clearSelectedItems();
                 if (data.hasOwnProperty("selected") && data.selected === true) {
