@@ -79,7 +79,7 @@ fr.ina.amalia.player.plugins.PluginBase.extend("fr.ina.amalia.player.plugins.Cus
          * @type {Object}
          * @default 130
          */
-        height: 130,
+        height: 40,
         /**
          * Progress bar dom element
          * @property rightContainer
@@ -128,7 +128,7 @@ fr.ina.amalia.player.plugins.PluginBase.extend("fr.ina.amalia.player.plugins.Cus
          */
         initialize: function () {
             this.settings = $.extend({
-                    height: '80',
+                    height: '40',
                     autohide: true,
                     hideDuration: 500,
                     timeFormat: 'ms',
