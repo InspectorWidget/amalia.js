@@ -185,6 +185,14 @@ fr.ina.amalia.player.plugins.PluginBase.extend("fr.ina.amalia.player.plugins.Cus
                 'class': classCss
             });
 
+            if (this.settings.enableProgressBar !== false) {
+                this.progressBar = new fr.ina.amalia.player.plugins.controlBar.widgets.ProgressBar({
+                    debug: this.settings.debug,
+                    framepreview: this.settings.framepreview,
+                    framepreviewTimeBound: this.settings.framepreviewTimeBound
+                }, this.mediaPlayer, this.container);
+            }
+
             this.timeIndicatorContainer = $('<div>', {
                 class: 'ajs-time-indicator'
             });
@@ -243,14 +251,6 @@ fr.ina.amalia.player.plugins.PluginBase.extend("fr.ina.amalia.player.plugins.Cus
                         this.initWidget(rightWidgetName, widgets.right[rightWidgetName], this.rightContainer);
                     }
                 }
-            }
-
-            if (this.settings.enableProgressBar !== false) {
-                this.progressBar = new fr.ina.amalia.player.plugins.controlBar.widgets.ProgressBar({
-                    debug: this.settings.debug,
-                    framepreview: this.settings.framepreview,
-                    framepreviewTimeBound: this.settings.framepreviewTimeBound
-                }, this.mediaPlayer, this.container);
             }
 
             //Set events
